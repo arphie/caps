@@ -49,6 +49,8 @@
                         <div class="form-group form-md-line-input has-info">
                             <select class="form-control selectmetatype" id="form_control_1" name="meta_type">
                                 <option value=""></option>
+                                <option value="hardware">Hardware</option>
+                                <option value="bended">Bended</option>
                                 <option value="color">Color</option>
                                 <option value="size">Size</option>
                                 <option value="type">Type</option>

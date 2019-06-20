@@ -174,6 +174,39 @@ $(document).ready(function(){
 
     });
 
+    $("#addnewbend").click(function(e){
+        e.preventDefault();
+        
+        var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
+        $("#orderplaceholder > .origbended").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+
+    });
+
+    $("#addnewplainsheet").click(function(e){
+        e.preventDefault();
+        
+        var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
+        $("#orderplaceholder > .origplainsheet").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+
+    });
+
+    $("#addnewhardware").click(function(e){
+        e.preventDefault();
+        
+        var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
+        $("#orderplaceholder > .orighardware").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+
+    });
+
+    $("#addothers").click(function(e){
+        e.preventDefault();
+        
+        var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
+        $("#orderplaceholder > .origother").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+
+    });
+
+
 
     var numItems = $('.dynawidth').length;
     console.log(numItems);
