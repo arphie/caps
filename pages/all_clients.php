@@ -55,7 +55,7 @@
                                         <td><?php echo $value['client_sku']; ?></td>
                                         <td><?php echo $value['client_address']; ?></td>
                                         <td>
-                                            <!-- <a href="<?php echo $baseline; ?>/index.php?page=profile&id=<?php echo $value['user_id']; ?>" class="btn blue btn-block">See More</a> -->
+                                            <a href="<?php echo $baseline; ?>/index.php?page=view_client&cid=<?php echo $value['client_id']; ?>" class="btn blue btn-block">See More</a>
                                         </td>
                                     </tr>
 

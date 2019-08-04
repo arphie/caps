@@ -71,6 +71,8 @@ $(document).ready(function(){
 
     });
 
+    $(".bendedpart")
+
     // BOF Placing Order
     $('.placeordernow').click(function(e){
         e.preventDefault();
@@ -171,6 +173,9 @@ $(document).ready(function(){
         $("#orderitem_"+ordercounter).find('#colorofitem').attr('name', 'ord['+ordercounter+'][color]');
         $("#orderitem_"+ordercounter).find('#getsizeofprofile').attr('name', 'ord['+ordercounter+'][size]');
         $("#orderitem_"+ordercounter).find('#superdupertotal').attr('name', 'ord['+ordercounter+'][finaltotal]');
+        
+        $("#orderitem_"+ordercounter).find('#ordertype').attr('name', 'ord['+ordercounter+'][ordertype]');
+
 
     });
 
@@ -178,32 +183,51 @@ $(document).ready(function(){
         e.preventDefault();
         
         var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
-        $("#orderplaceholder > .origbended").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $("#orderplaceholder").attr('data-counter', ordercounter);
 
+        $("#orderplaceholder > .origbended").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        
+        $('#orderitem_'+ordercounter).find("#basepieces").attr('name', 'ord['+ordercounter+'][basepieces]');
+        $('#orderitem_'+ordercounter).find("#colorofitem").attr('name', 'ord['+ordercounter+'][colorofitem]');
+        $('#orderitem_'+ordercounter).find("#getsizeofprofile").attr('name', 'ord['+ordercounter+'][getsizeofprofile]');
+        $('#orderitem_'+ordercounter).find("#baseprice").attr('name', 'ord['+ordercounter+'][baseprice]');
+        $("#orderitem_"+ordercounter).find('#ordertype').attr('name', 'ord['+ordercounter+'][ordertype]');
     });
 
     $("#addnewplainsheet").click(function(e){
         e.preventDefault();
         
         var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
-        $("#orderplaceholder > .origplainsheet").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $("#orderplaceholder").attr('data-counter', ordercounter);
 
+        $("#orderplaceholder > .origplainsheet").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $('#orderitem_'+ordercounter).find("#basepieces").attr('name', 'ord['+ordercounter+'][basepieces]');
+        $('#orderitem_'+ordercounter).find("#colorofitem").attr('name', 'ord['+ordercounter+'][colorofitem]');
+        $('#orderitem_'+ordercounter).find("#getsizeofprofile").attr('name', 'ord['+ordercounter+'][getsizeofprofile]');
+        $('#orderitem_'+ordercounter).find("#baseprice").attr('name', 'ord['+ordercounter+'][baseprice]');
+        $("#orderitem_"+ordercounter).find('#ordertype').attr('name', 'ord['+ordercounter+'][ordertype]');
     });
 
     $("#addnewhardware").click(function(e){
         e.preventDefault();
         
         var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
-        $("#orderplaceholder > .orighardware").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $("#orderplaceholder").attr('data-counter', ordercounter);
 
+        $("#orderplaceholder > .orighardware").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $('#orderitem_'+ordercounter).find("#superdupertotal").attr('name', 'ord['+ordercounter+'][superdupertotal]');
+        $("#orderitem_"+ordercounter).find('#ordertype').attr('name', 'ord['+ordercounter+'][ordertype]');
     });
 
     $("#addothers").click(function(e){
         e.preventDefault();
         
         var ordercounter = parseInt($("#orderplaceholder").attr('data-counter')) + 1;
-        $("#orderplaceholder > .origother").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $("#orderplaceholder").attr('data-counter', ordercounter);
 
+        $("#orderplaceholder > .origother").clone().removeClass('hideme').addClass('orderitemgen').attr({'id' : 'orderitem_'+ordercounter, 'data-ordernum' : ordercounter}).appendTo(".listofordes");
+        $('#orderitem_'+ordercounter).find("#superdupertotal").attr('name', 'ord['+ordercounter+'][superdupertotal]');
+        $("#orderitem_"+ordercounter).find('#ordertype').attr('name', 'ord['+ordercounter+'][ordertype]');
     });
 
 
@@ -481,6 +505,50 @@ $(document).on({
 
     }
 }, '#length');
+
+$(document).on({
+    blur: function() {
+        if ($(this).is('[readonly]')) {
+
+        } else {
+               var dbendprice = $(this).val();
+
+               $(this).parents(".bendedpart").find("#dtotalprice").val(dbendprice);
+        }
+
+    }
+}, '.bendfee');
+
+$(document).on({
+    blur: function() {
+        if ($(this).is('[readonly]')) {
+
+        } else {
+                var dunitprice = $(this).val();
+                var dcount = $(this).parents(".orderitem").find("#dpiece").val();
+                var dtotalammount = $(this).parents(".orighardware").find('#superdupertotal').val();
+                var totalunitprice = parseFloat(dunitprice) * parseFloat(dcount);
+                
+                $(this).parents(".orderitem").find("#dtotalprice").val(totalunitprice);
+                $(this).parents(".orighardware").find('#superdupertotal').val(parseFloat(dtotalammount) + totalunitprice);
+        }
+
+    }
+}, '.hardunitprice');
+
+$(document).on({
+    blur: function() {
+        if ($(this).is('[readonly]')) {
+
+        } else {
+                var dunitprice = $(this).val();
+                var dtotalammount = $(this).parents(".origother").find('#superdupertotal').val();
+
+                $(this).parents(".origother").find('#superdupertotal').val(parseFloat(dtotalammount) + parseFloat(dunitprice));
+        }
+
+    }
+}, '.othertotal');
 
 
 

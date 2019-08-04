@@ -1,9 +1,11 @@
-<?php
+-<?php
     if(isset($_GET['isapprove'])){
         $toapprove = $_GET['isapprove'];
         $orderdata = $_GET['pid'];
         $client::toapprove($orderdata, $toapprove);
     }
+
+    
 ?>
 <div class="page-content-wrapper">
     <!-- BEGIN CONTENT BODY -->
@@ -13,7 +15,8 @@
                 $packingdata = $client::packing($_GET['pid']);
                 $specs = unserialize($packingdata['order_specs']);
                 // $profile = $packingdata['dbaseprofile'];
-                $clientid = $specs['clientid'];
+                $clientid = $packingdata['order_client'];
+                $ord_balance = $packingdata['ord_balance'];
                 unset($specs['profileitem']);
                 unset($specs['dbaseprice']);
                 unset($specs['dbaseprofile']);
@@ -21,19 +24,34 @@
                 unset($specs['dclient']);
                 unset($specs['Submit']);
             ?>
+            <?php
+                if (isset($_POST['dsubsdd'])) {
+                    unset($_POST['dsubsdd']);
+                    $specs['ajsinfo'] = $_POST;
+                    $client::updateadjustment($specs, $packingdata['order_id']);
+
+                    // header("location: ".BASELINK."/index.php?page=all_payment");
+                }
+            ?>
             <div class="col-md-12">
+                <?php
+                    if (isset($_POST['payorder'])) {    
+                        $client::savePayment($_POST);
+                        
+                    }
+                ?>
                 <div class="col-md-4">
                     <div class="portlet light profile-sidebar-portlet ">
+                        
                         <div class="innerprofile">
                             <?php $clientdata = $client::getclientinfobyid($clientid); ?>
+                            <?php $payemntinfo = $client::getPayments($_GET['pid']); ?>
                             <!-- <pre>
-                                <?php print_r($clientdata); ?>
+                                <?php print_r($clientid); ?>
                             </pre> -->
 
                         </div>
                         <!-- SIDEBAR USERPIC -->
-                        <div class="profile-userpic">
-                            <img src="../assets/pages/media/profile/profile_user.jpg" class="img-responsive" alt=""> </div>
                         <!-- END SIDEBAR USERPIC -->
                         <!-- SIDEBAR USER TITLE -->
                         <div class="profile-usertitle">
@@ -43,15 +61,15 @@
                         <!-- END SIDEBAR USER TITLE -->
                         <!-- SIDEBAR BUTTONS -->
                         <div class="profile-userbuttons">
-                            <a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $_GET['pid']; ?>&isapprove=1" class="btn btn-circle green btn-sm">Approve</a>
-                            <a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $_GET['pid']; ?>&isapprove=2" class="btn btn-circle green btn-sm">Disapprove</a>
-                            <a href="<?php echo $baseline; ?>/index.php?page=view_jo&pid=<?php echo $_GET['pid']; ?>" class="btn btn-circle red btn-sm">Print & Create JO</a>
+                            <a href="#" class="btn btn-circle green btn-sm confirmpayment">Pay Order</a>
+                            
                         </div>
                         <!-- END SIDEBAR BUTTONS -->
                         <!-- SIDEBAR MENU -->
                         <?php
                             $totalorders = 0;
                             $totalprice = 0;
+                            $totalammount = 0;
                             foreach($specs['stims'] as $totskey => $totsval){
                                 foreach($totsval as $totinskey => $totinsval){
                                     $totalprice += $totinsval['dtotalprice'];
@@ -68,43 +86,159 @@
                             <ul class="nav">
                                 <li>
                                     <a href="#">
-                                        <i class="icon-info"></i> ₱ <?php echo number_format($totalprice,2,".",","); ?> </a>
+                                        <i class="icon-info"></i> <?php echo count($specs['ord']); ?> Orders </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="icon-info"></i> <?php echo count($specs['ord']); ?> Orders </a>
+                                        <i class="icon-info"></i> ₱ <?php echo number_format($ord_balance,2,".",","); ?> </a>
+                                        <?php if(!empty($payemntinfo)): ?>
+                                            <ul>
+                                                <?php foreach($payemntinfo as $key => $svalue): ?>
+                                                    <li>
+                                                        <div><?php echo $svalue['payamount']; ?> thru <?php echo $svalue['pmethod']; ?></div>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        <?php endif; ?>
                                 </li>
                             </ul>
                         </div>
+                        
                         <!-- END MENU -->
                     </div>
-
+                    <?php if(@$_GET['view'] != "paid"): ?>
+                    <div class="portlet light profile-sidebar-portlet ">
+                        <div class="addpayment" style="padding:0 15px 5px;">
+                                
+                                    <div class="form-group form-md-line-input has-info" style="margin-bottom:5px;">
+                                        <select class="form-control" id="paymentmethon" name="pmethod">
+                                            <option value="">Select Payment Method</option>
+                                            <option value="cash">Cash</option>
+                                            <option value="card">Card</option>
+                                            <option value="check">Check</option>
+                                            <option value="account">Account</option>
+                                            <option value="others">Others</option>
+                                        </select>
+                                        <label for="paymentmethon">Payment Method</label>
+                                    </div>
+                                
+                                <div class="pcash actionbase hideme">
+                                    <div class="inneroff">
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcashreciept" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Reciept Number</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcashamount" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Amount</label>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="pcard actionbase hideme">
+                                    <div class="inneroff">
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcardreciept" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Reciept Number</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcardbank" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Bank Name</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcardamount" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Amount</label>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="pcheck actionbase hideme">
+                                    <div class="inneroff">
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcheckreciept" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Reciept Number</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcheckbank" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Bank Name</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pcheckamount" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Amount</label>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="paccount actionbase hideme">
+                                    <div class="inneroff">
+                                    <?php $accounts = $client::getAccountInfo($clientid); ?>
+                                    <ul style="padding: 0;">
+                                        <?php foreach($accounts as $key => $value): ?>
+                                            <li style="list-style:none;"><input type="radio" name="paymentammount" value="<?php echo $value['acid']; ?>" style="margin-right:10px;">₱ <?php echo number_format($value['abalance'],2,".",","); ?> (from <?php echo ($value['dtype'] == "advance" ? "Advance Payment" : $value['dtype']); ?>)</li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                    </div>
+                                </div> 
+                                <div class="pothers actionbase hideme">
+                                    <div class="inneroff">
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pothersreciept" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Reciept Number</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" name="pothersamount" value="" class="form-control" placeholder="">
+                                            <label for="form_control_1">Amount</label>
+                                        </div>
+                                        <div class="form-group form-md-line-input">
+                                            <textarea class="form-control" id="pothersdesc" rows="3" placeholder="Enter more text" name="pothersdesc"></textarea>
+                                            <label for="form_control_1">Fee Description</label>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="form-actions actionbase hideme submitbase">
+                                    <input type="hidden" value="<?php echo $_GET['pid']; ?>" name="orderid">
+                                    <button type="submit" class="btn blue" name="payorder">Submit</button>
+                                    <button type="button" class="btn default">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
+                
                 <div class="col-md-8">
+                    <form action="" method="post">
                     <div class="portlet light portlet-fit ">
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-microphone font-green"></i>
-                                <span class="caption-subject bold font-green uppercase"> Packing List</span>
+                                <span class="caption-subject bold font-green uppercase">(Total: ₱ <?php echo number_format($totalprice,2,".",","); ?>)</span>
                                 <!-- <span class="caption-helper">user timeline</span> -->
                             </div>
-                            <div class="actions">
+                            <div class="actions" style="margin-left:10px;">
                                 <div class="btn-group">
-                                    <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true"> Actions
-                                        <i class="fa fa-angle-down"></i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li>
-                                            <a href="#" class="printpl">
-                                                <i class="i"></i> Print Packing List</a>
-                                        </li>
-                                        <li class="divider"> </li>
-                                        <li>
-                                            <a href="<?php echo $baseline; ?>/index.php?page=view_jo&pid=<?php echo $_GET['pid']; ?>">View Job Orber</a>
-                                        </li>
-                                    </ul>
+                                <?php if(@$_GET['todo'] == 'adjust'): ?>
+                                    <input type="submit" class="btn green-haze btn-outline btn-circle btn-sm" name="dsubsdd" id="">
+                                <?php endif; ?>
+                                    <!-- <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;"> Submit </a> -->
                                 </div>
                             </div>
+                            <?php if(isset($_GET['view']) && $_GET['view'] == 'paid'): ?>
+                                <div class="actions">
+                                    <div class="btn-group">
+                                        <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true"> Actions
+                                            <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li>
+                                                <a href="<?php echo $baseline; ?>/index.php?page=view_payment&pid=<?php echo $_GET['pid']; ?>&view=paid&todo=adjust">
+                                                    <i class="i"></i> Adjust Packing List</a>
+                                            </li>
+                                            <!-- <li class="divider"> </li>
+                                            <li>
+                                                <a href="<?php echo $baseline; ?>/index.php?page=view_jo&pid=<?php echo $_GET['pid']; ?>">View Job Orber</a>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="portlet-body printable">
                             <div class="timeline">
@@ -113,7 +247,7 @@
                                     <div class="timeline-item">
                                             <div class="timeline-badge">
                                                 <div class="timeline-icon">
-                                                    <i class="icon-paper-clip font-red-intense"></i>
+                                                    <i class="icon-social-dropbox font-red-intense"></i>
                                                 </div>
                                             </div>
                                             <div class="timeline-body">
@@ -312,6 +446,18 @@
                                                                 </table>
                                                             </div>
                                                         <?php endif; ?>
+                                                        <?php if(@$_GET['todo'] == 'adjust'): ?>
+                                                            <div class="dadjustpart">
+                                                                <div class="dadjinner">
+                                                                    <div class="form-group form-md-line-input">
+                                                                        <textarea class="form-control" rows="3" placeholder="Adjustment Details" name="ajd[<?php echo $orderitemkey; ?>][adjnote]"><?php echo $specs['ajsinfo']['ajd'][$orderitemkey]['adjnote']; ?></textarea>
+                                                                    </div>
+                                                                    <div class="form-group form-md-line-input">
+                                                                        <input type="text" class="form-control" id="form_control_1" placeholder="New Total" name="ajd[<?php echo $orderitemkey; ?>][adjtotal]" value="<?php echo $specs['ajsinfo']['ajd'][$orderitemkey]['adjtotal']; ?>">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -321,6 +467,7 @@
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
 
             </div>
@@ -331,11 +478,34 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.3.3/jQuery.print.min.js"></script>
 <script>
     $( document ).ready(function() {
+
+        $(".confirmpayment").click(function(e){
+            e.preventDefault();
+            console.log("herer");
+        });
         $(".printpl").click(function(e){
             e.preventDefault();
             // window.print();
 
             $.print(".printable"); 
+        });
+
+        $('#paymentmethon').on('change', function() {
+            var istype = $(this).val();
+            console.log(istype);
+
+            $(this).parents(".addpayment").find(".actionbase").hide(function(){
+                $(this).addClass('hideme')
+            });
+
+            if(istype != ""){
+                $(this).parents(".addpayment").find(".p"+istype).show(function(){
+                    $(this).removeClass("hideme");
+                });
+                $(this).parents(".addpayment").find(".submitbase").show(function(){
+                    $(this).removeClass("hideme");
+                });
+            }
         });
     });
     

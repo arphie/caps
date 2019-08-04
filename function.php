@@ -1,14 +1,16 @@
 <?php
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1); 
 
 	session_start();
 	date_default_timezone_set('Asia/Manila');
 	
 	// DB credentials
-	define('DBHOST', 'localhost', true);
-	define('DBUSER', 'root', true);
-	define('DBPASS', 'root', true);
-	define('DBNAME', 'caps', true);
-	define('BASELINK', '/caps', true);
+	define('DBHOST', 'localhost');
+	define('DBUSER', 'root');
+	define('DBPASS', 'root');
+	define('DBNAME', 'caps');
+	define('BASELINK', '/caps');
 
 
 	// global variables

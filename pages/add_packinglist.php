@@ -4,9 +4,9 @@
     <!-- BEGIN CONTENT BODY -->
     <div class="page-content">
          <?php
-            $clientinfo = $client::getclientinfobyid($_GET['clientid']);
-            $clientypeinfo = $client::getclienttype($clientinfo['client_discount']);
-            $datadiscount = unserialize($clientypeinfo['prof_base']);
+            $clientinfo = $client::getclientinfobyid(@$_GET['clientid']);
+            $clientypeinfo = $client::getclienttype(@$clientinfo['client_discount']);
+            $datadiscount = unserialize(@$clientypeinfo['prof_base']);
 
             $distojson = json_encode($datadiscount);
 
@@ -112,6 +112,7 @@
                                                 <i class="fa fa-gift"></i> Other </div>
                                         </div>
                                         <div class="portlet-body doragebolt">
+                                        <input type="hidden" id="ordertype" value="other">
                                             <div class="col-md-12">
                                                 <div class="form-group form-md-line-input">
                                                     <input type="text" id="superdupertotal" name="superdupertotal" value="0" class="form-control" id="form_control_1" placeholder="" readonly="readonly">
@@ -125,8 +126,8 @@
                                                     <div class="col-md-9">
                                                         <div class="form-group form-md-line-input">
                                                             <!-- <input type="number" id="length" value="0" class="form-control" id="form_control_1" placeholder="" step=".01"> -->
-                                                            <textarea class="form-control" rows="3" placeholder="Enter more text"></textarea>
-                                                            <label for="form_control_1">Description</label>
+                                                            <textarea class="form-control" id="otherfees" rows="3" placeholder="Enter more text"></textarea>
+                                                            <label for="form_control_1">Fee Description</label>
                                                             <!-- <span class="help-block">Some help goes here...</span> -->
                                                         </div>
                                                     </div>
@@ -138,14 +139,14 @@
                                                     </div> -->
                                                     <div class="col-md-3">
                                                         <div class="form-group form-md-line-input">
-                                                            <input type="text" id="dtotalprice" class="form-control getparttotal" id="form_control_1" placeholder="" readonly="readonly">
+                                                            <input type="text" id="dtotalprice" class="form-control othertotal" id="form_control_1" placeholder="" >
                                                             <label for="form_control_1">Total</label>
                                                             <!-- <span class="help-block">Some help goes here...</span> -->
                                                         </div>
                                                     </div>
                                                     <br class="clear">
                                                 </div>
-                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowother">Add Order Specifications</a>
+                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowother">Add Other Fees</a>
                                             </div>
                                             <br>
                                             <br>
@@ -160,6 +161,7 @@
                                                 <i class="fa fa-gift"></i> Order Hardware </div>
                                         </div>
                                         <div class="portlet-body doragebolt">
+                                        <input type="hidden" id="ordertype" value="hardware">
                                             <div class="col-md-12">
                                                 <div class="form-group form-md-line-input">
                                                     <input type="text" id="superdupertotal" name="superdupertotal" value="0" class="form-control" id="form_control_1" placeholder="" readonly="readonly">
@@ -172,28 +174,26 @@
                                                 <div class="hideme originalitems orderitem">
                                                     <div class="col-md-3">
                                                         <div class="form-group form-md-line-input">
-                                                            <input type="number" id="length" value="0" class="form-control" id="form_control_1" placeholder="" step=".01">
+                                                            <input type="number" id="dpiece" value="0" class="form-control" id="form_control_1" placeholder="" step=".01">
                                                             <label for="form_control_1">Pieces</label>
                                                             <!-- <span class="help-block">Some help goes here...</span> -->
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group form-md-line-input has-info dprofileselector">
-                                                            <select class="form-control" id="productprofile" name="profileitem">
+                                                            <select class="form-control" id="hardwareparts" name="profileitem">
                                                                 <option value=""></option>
                                                                 <?php foreach ($gethardware as $key => $value) { ?>
                                                                     <option value="<?php echo $value['meta_id']; ?>" data-baseprod='<?php echo $value['meta_id']; ?>'><?php echo $value['meta_name']; ?></option>
                                                                 <?php } ?>
                                                             </select>
-                                                            <label for="productprofile">Type</label>
-                                                            <input type="hidden" id="dbaseprice" name="dbaseprice">
-                                                            <input type="hidden" id="dbaseprofile" name="dbaseprofile">
+                                                            <label for="hardwareparts">Type</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group form-md-line-input">
-                                                            <input type="text" id="baseprice" value="0" class="form-control" id="form_control_1" placeholder="" readonly="readonly">
-                                                            <label for="form_control_1">Price</label>
+                                                            <input type="text" id="baseprice" value="0" class="form-control hardunitprice" id="form_control_1" placeholder="">
+                                                            <label for="form_control_1">Unit Price</label>
                                                             <!-- <span class="help-block">Some help goes here...</span> -->
                                                         </div>
                                                     </div>
@@ -206,7 +206,7 @@
                                                     </div>
                                                     <br class="clear">
                                                 </div>
-                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowhardware">Add Order Specifications</a>
+                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowhardware">Add Hardware Orders</a>
                                             </div>
                                             <br>
                                             <br>
@@ -221,9 +221,10 @@
                                                 <i class="fa fa-gift"></i> Order Plainsheet </div>
                                         </div>
                                         <div class="portlet-body doragebolt">
+                                        <input type="hidden" id="ordertype" value="plainsheet">
                                             <div class="col-md-3">
                                                 <div class="form-group form-md-line-input">
-                                                    <input type="text" id="baseprice" value="0" class="form-control" id="form_control_1" placeholder="">
+                                                    <input type="text" id="basepieces" value="0" class="form-control" id="form_control_1" placeholder="">
                                                     <label for="form_control_1">Pieces</label>
                                                     <!-- <span class="help-block">Some help goes here...</span> -->
                                                 </div>
@@ -266,48 +267,35 @@
                                                 </div>
                                             </div> -->
                                             <br class="clear">
-                                            <div id="addorderitems">
+                                            <!-- <div id="addorderitems">
                                                 <div class="hideme originalitems orderitem">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group form-md-line-input">
                                                             <input type="number" id="length" value="0" class="form-control" id="form_control_1" placeholder="" step=".01">
                                                             <label for="form_control_1">Pieces</label>
-                                                            <!-- <span class="help-block">Some help goes here...</span> -->
+                                                            
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group form-md-line-input has-info dprofileselector">
-                                                            <select class="form-control" id="productprofile" name="profileitem">
-                                                                <option value=""></option>
-                                                                <?php foreach ($getbended as $key => $value) { ?>
-                                                                    <option value="<?php echo $value['meta_id']; ?>" data-baseprod='<?php echo $value['meta_id']; ?>'><?php echo $value['meta_name']; ?></option>
-                                                                <?php } ?>
-                                                            </select>
-                                                            <label for="productprofile">Profiles</label>
-                                                            <input type="hidden" id="dbaseprice" name="dbaseprice">
-                                                            <input type="hidden" id="dbaseprofile" name="dbaseprofile">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group form-md-line-input">
                                                             <input type="text" id="baseprice" value="0" class="form-control" id="form_control_1" placeholder="" readonly="readonly">
                                                             <label for="form_control_1">Price</label>
-                                                            <!-- <span class="help-block">Some help goes here...</span> -->
+                                                            
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group form-md-line-input">
                                                             <input type="text" id="dtotalprice" class="form-control getparttotal" id="form_control_1" placeholder="" readonly="readonly">
                                                             <label for="form_control_1">Total</label>
-                                                            <!-- <span class="help-block">Some help goes here...</span> -->
+                                                            
                                                         </div>
                                                     </div>
                                                     <br class="clear">
                                                 </div>
-                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowplainsheet">Add Order Specifications</a>
-                                            </div>
+                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowplainsheet">Add Plainsheet Specifications</a>
+                                            </div> 
                                             <br>
-                                            <br>
+                                            <br>-->
                                             <div class="packingitems" data-countspecs="0"></div>
                                         </div>
                                     </div>
@@ -319,16 +307,12 @@
                                                 <i class="fa fa-gift"></i> Order Bended </div>
                                         </div>
                                         <div class="portlet-body doragebolt">
+                                        <input type="hidden" id="ordertype" value="bended">
                                             <div class="col-md-3">
-                                                <?php $getbendeds = $metaData::getmetavalues('bended'); ?>
-                                                <div class="form-group form-md-line-input has-info">
-                                                    <select class="form-control" id="getsizeofprofile" name="ordersize">
-                                                        <option value=""></option>
-                                                        <?php foreach ($getbendeds as $key => $value) { ?>
-                                                            <option value="<?php echo $value['meta_id']; ?>"><?php echo $value['meta_name']; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                    <label for="getsizeofprofile">Bended</label>
+                                                <div class="form-group form-md-line-input">
+                                                    <input type="text" id="basepieces" value="0" class="form-control" id="form_control_1" placeholder="">
+                                                    <label for="form_control_1">Pieces</label>
+                                                    <!-- <span class="help-block">Some help goes here...</span> -->
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -356,38 +340,37 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group form-md-line-input">
-                                                    <input type="text" id="superdupertotal" name="superdupertotal" value="0" class="form-control" id="form_control_1" placeholder="" readonly="readonly">
-                                                    <label for="form_control_1">Total Order</label>
+                                                    <input type="text" id="baseprice" value="0" class="form-control" id="form_control_1" placeholder="">
+                                                    <label for="form_control_1">Price</label>
                                                     <!-- <span class="help-block">Some help goes here...</span> -->
                                                 </div>
-                                            </div>
+                                            </div>  
                                             <br class="clear">
                                             <div id="addorderitems">
-                                                <div class="hideme originalitems orderitem">
+                                                <div class="hideme originalitems orderitem bendedpart">
                                                     <div class="col-md-3">
                                                         <div class="form-group form-md-line-input">
-                                                            <input type="number" id="length" value="0" class="form-control" id="form_control_1" placeholder="" step=".01">
+                                                            <input type="number" id="dbpices" value="0" class="form-control" id="form_control_1" placeholder="" step=".01">
                                                             <label for="form_control_1">Pieces</label>
                                                             <!-- <span class="help-block">Some help goes here...</span> -->
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <div class="form-group form-md-line-input has-info dprofileselector">
-                                                            <select class="form-control" id="productprofile" name="profileitem">
+                                                        <?php $getbendeds = $metaData::getmetavalues('bended'); ?>
+                                                        <div class="form-group form-md-line-input has-info">
+                                                            <select class="form-control" id="bendedto" name="ordersize">
                                                                 <option value=""></option>
-                                                                <?php foreach ($getbended as $key => $value) { ?>
-                                                                    <option value="<?php echo $value['meta_id']; ?>" data-baseprod='<?php echo $value['meta_id']; ?>'><?php echo $value['meta_name']; ?></option>
+                                                                <?php foreach ($getbendeds as $key => $value) { ?>
+                                                                    <option value="<?php echo $value['meta_id']; ?>"><?php echo $value['meta_name']; ?></option>
                                                                 <?php } ?>
                                                             </select>
-                                                            <label for="productprofile">Profiles</label>
-                                                            <input type="hidden" id="dbaseprice" name="dbaseprice">
-                                                            <input type="hidden" id="dbaseprofile" name="dbaseprofile">
+                                                            <label for="bendedto">Bended to</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group form-md-line-input">
-                                                            <input type="text" id="baseprice" value="0" class="form-control" id="form_control_1" placeholder="" readonly="readonly">
-                                                            <label for="form_control_1">Price</label>
+                                                            <input type="text" id="baseprice" value="0" class="form-control bendfee" id="form_control_1" placeholder="">
+                                                            <label for="form_control_1">Bending Fee</label>
                                                             <!-- <span class="help-block">Some help goes here...</span> -->
                                                         </div>
                                                     </div>
@@ -400,7 +383,7 @@
                                                     </div>
                                                     <br class="clear">
                                                 </div>
-                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowbend">Add Order Specifications</a>
+                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrowbend">Add Bended Specifications</a>
                                             </div>
                                             <br>
                                             <br>
@@ -415,6 +398,7 @@
                                                 <i class="fa fa-gift"></i> Order Panel </div>
                                         </div>
                                         <div class="portlet-body doragebolt">
+                                        <input type="hidden" id="ordertype" value="panel">
                                             <div class="col-md-3">
                                                 <div class="form-group form-md-line-input has-info dprofileselector">
                                                     <select class="form-control" id="productprofile" name="profileitem">
@@ -491,7 +475,7 @@
                                                     </div>
                                                     <br class="clear">
                                                 </div>
-                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrow">Add Order Specifications</a>
+                                                <a href="#" class="btn blue-hoki btn-outline sbold uppercase" id="addnewrow">Add Panel Specifications</a>
                                             </div>
                                             <br>
                                             <br>
@@ -548,6 +532,123 @@
         
     });
 
+    $(document).on('click', '.orderitemgen #addnewrowother', function(e){
+        e.preventDefault();
+        var dprofile = $(this).parents('.doragebolt').find('#productprofile').val();
+        var dsize = $(this).parents('.doragebolt').find('#getsizeofprofile').val();
+        var ddiscount = 0;
+        var vitem = "baseprice_"+dprofile+"_"+dsize; // initialize key
+        // $.each( dinformation, function( key, value ) {
+        //     if (vitem == key) {
+        //         ddiscount = value;
+        //         return false;
+        //     }
+        // });
+
+        console.log(vitem);
+        console.log(ddiscount);
+
+        var packingcount = parseInt($(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs')) + 1;
+        $(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs', packingcount);
+
+        // var doriginalfields = $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".portlet-body").find(".packingitems"));
+        $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".doragebolt").find(".packingitems"));
+        var ordercount = $(this).parents(".origother").attr('data-ordernum');
+
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #otherfees").attr('name', 'stims['+ordercount+']['+packingcount+'][otherfees]');
+        
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dtotalprice").attr('name', 'stims['+ordercount+']['+packingcount+'][dtotalprice]');
+    });
+
+    $(document).on('click', '.orderitemgen #addnewrowhardware', function(e){
+        e.preventDefault();
+        var dprofile = $(this).parents('.doragebolt').find('#productprofile').val();
+        var dsize = $(this).parents('.doragebolt').find('#getsizeofprofile').val();
+        var ddiscount = 0;
+        var vitem = "baseprice_"+dprofile+"_"+dsize; // initialize key
+        // $.each( dinformation, function( key, value ) {
+        //     if (vitem == key) {
+        //         ddiscount = value;
+        //         return false;
+        //     }
+        // });
+
+        console.log(vitem);
+        console.log(ddiscount);
+
+        var packingcount = parseInt($(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs')) + 1;
+        $(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs', packingcount);
+
+        // var doriginalfields = $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".portlet-body").find(".packingitems"));
+        $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".doragebolt").find(".packingitems"));
+        var ordercount = $(this).parents(".orighardware").attr('data-ordernum');
+
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dpiece").attr('name', 'stims['+ordercount+']['+packingcount+'][dpiece]');
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #hardwareparts").attr('name', 'stims['+ordercount+']['+packingcount+'][hardwareparts]');
+        
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #baseprice").attr('name', 'stims['+ordercount+']['+packingcount+'][baseprice]').val(ddiscount);
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dtotalprice").attr('name', 'stims['+ordercount+']['+packingcount+'][dtotalprice]');
+    });
+
+    $(document).on('click', '.orderitemgen #addnewrowbend', function(e){
+        e.preventDefault();
+        var dprofile = $(this).parents('.doragebolt').find('#productprofile').val();
+        var dsize = $(this).parents('.doragebolt').find('#getsizeofprofile').val();
+        var ddiscount = 0;
+        var vitem = "baseprice_"+dprofile+"_"+dsize; // initialize key
+        // $.each( dinformation, function( key, value ) {
+        //     if (vitem == key) {
+        //         ddiscount = value;
+        //         return false;
+        //     }
+        // });
+
+        console.log(vitem);
+        console.log(ddiscount);
+
+        var packingcount = parseInt($(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs')) + 1;
+        $(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs', packingcount);
+
+        // var doriginalfields = $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".portlet-body").find(".packingitems"));
+        $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".doragebolt").find(".packingitems"));
+        var ordercount = $(this).parents(".origbended").attr('data-ordernum');
+
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dbpices").attr('name', 'stims['+ordercount+']['+packingcount+'][dbpices]');
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #bendedto").attr('name', 'stims['+ordercount+']['+packingcount+'][bendedto]');
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #baseprice").attr('name', 'stims['+ordercount+']['+packingcount+'][baseprice]').val(ddiscount);
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dtotalprice").attr('name', 'stims['+ordercount+']['+packingcount+'][dtotalprice]');
+    });
+    
+    $(document).on('click', '.orderitemgen #addnewrowplainsheet', function(e){
+        e.preventDefault();
+        var dprofile = $(this).parents('.doragebolt').find('#productprofile').val();
+        var dsize = $(this).parents('.doragebolt').find('#getsizeofprofile').val();
+        var ddiscount = 0;
+        var vitem = "baseprice_"+dprofile+"_"+dsize; // initialize key
+        // $.each( dinformation, function( key, value ) {
+        //     if (vitem == key) {
+        //         ddiscount = value;
+        //         return false;
+        //     }
+        // });
+
+        console.log(vitem);
+        console.log(ddiscount);
+
+        var packingcount = parseInt($(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs')) + 1;
+        $(this).parents('.orderitemgen').find(".packingitems").attr('data-countspecs', packingcount);
+
+        // var doriginalfields = $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".portlet-body").find(".packingitems"));
+        $(this).parents("#addorderitems").find(".originalitems").clone().removeClass('hideme').removeClass('originalitems').attr('id', 'orderspecs_'+packingcount).appendTo($(this).parents(".doragebolt").find(".packingitems"));
+        var ordercount = $(this).parents(".getonloader").attr('data-ordernum');
+
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #baseprice").attr('name', 'stims['+ordercount+']['+packingcount+'][getsizeofprofile]');
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dolenth").attr('name', 'stims['+ordercount+']['+packingcount+'][dolenth]');
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #length").attr('name', 'stims['+ordercount+']['+packingcount+'][length]');
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #baseprice").attr('name', 'stims['+ordercount+']['+packingcount+'][baseprice]').val(ddiscount);
+        $(this).parents(".doragebolt").find("#orderspecs_"+packingcount+" #dtotalprice").attr('name', 'stims['+ordercount+']['+packingcount+'][dtotalprice]');
+
+    });
     $(document).on('click', '.orderitemgen #addnewrow', function(e){
         e.preventDefault();
         var dinformation = <?php echo $distojson; ?>;

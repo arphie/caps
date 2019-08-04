@@ -190,6 +190,12 @@
                     <span class="title">Packing List</span>
                 </a>
             </li>
+            <li class="nav-item  ">
+                <a href="<?php echo $baseline; ?>/index.php?page=all_payment" class="nav-link ">
+                    <i class="icon-home"></i>
+                    <span class="title">Payment</span>
+                </a>
+            </li>
         </ul>
         <!-- END SIDEBAR MENU -->
     </div>

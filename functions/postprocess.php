@@ -77,6 +77,7 @@
 
         if(isset($_GET) && $dpage == 'add_packinglist'){
             $client::savepacking($_POST);
+            
         }
 
         if(isset($_GET) && $dpage == 'add_shippment'){
