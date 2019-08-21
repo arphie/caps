@@ -77,10 +77,10 @@
                                                                             <td><strong>Size</strong></td>
                                                                             <td><?php echo $metaData::getspecificmetavalue($specs['ord'][$orderitemkey]["getsizeofprofile"]); ?> </td>
                                                                         </tr>
-                                                                        <tr>
+                                                                        <!-- <tr>
                                                                             <td><strong>Total Price</strong></td>
                                                                             <td><?php echo $specs['ord'][$orderitemkey]["baseprice"]; ?> </td>
-                                                                        </tr>
+                                                                        </tr> -->
                                                                     <?php elseif($orderitemvalue['ordertype'] == "hardware"): ?>
                                                                     <?php elseif($orderitemvalue['ordertype'] == "other"): ?>
                                                                     <?php elseif($orderitemvalue['ordertype'] == "bended"): ?>
@@ -120,8 +120,8 @@
                                                                         <tr>
                                                                             <th> Pieces </th>
                                                                             <th> Type </th>
-                                                                            <th> Price </th>
-                                                                            <th> Total </th>
+                                                                            <!-- <th> Price </th> -->
+                                                                            <!-- <th> Total </th> -->
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -131,18 +131,18 @@
                                                                         <tr>
                                                                             <td><?php echo $inorderkey; ?></td>
                                                                             <td><?php echo $metaData::getspecificmetavalue($isvalsor["hardwareparts"]); ?> </td>
-                                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
-                                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                                            <!-- <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
+                                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td> -->
                                                                         </tr>
                                                                     <?php } ?>
                                                                     </tbody>
                                                                     <thead>
-                                                                        <tr>
+                                                                        <!-- <tr>
                                                                             <th> &nbsp; </th>
                                                                             <th> &nbsp; </th>
                                                                             <th> Total </th>
                                                                             <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
-                                                                        </tr>
+                                                                        </tr> -->
                                                                     </thead>
                                                                 </table>
                                                             </div>
@@ -153,8 +153,8 @@
                                                                         <tr>
                                                                             <th> Pieces </th>
                                                                             <th> Bended to </th>
-                                                                            <th> Price </th>
-                                                                            <th> Total </th>
+                                                                            <!-- <th> Price </th> -->
+                                                                            <!-- <th> Total </th> -->
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -164,18 +164,18 @@
                                                                         <tr>
                                                                             <td><?php echo $inorderkey; ?></td>
                                                                             <td><?php echo $metaData::getspecificmetavalue($isvalsor["bendedto"]); ?> </td>
-                                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
-                                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                                            <!-- <td>₱ <?php echo $isvalsor['baseprice']; ?> </td> -->
+                                                                            <!-- <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td> -->
                                                                         </tr>
                                                                     <?php } ?>
                                                                     </tbody>
                                                                     <thead>
-                                                                        <tr>
+                                                                        <!-- <tr>
                                                                             <th> &nbsp; </th>
                                                                             <th> &nbsp; </th>
                                                                             <th> Total </th>
                                                                             <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
-                                                                        </tr>
+                                                                        </tr> -->
                                                                     </thead>
                                                                 </table>
                                                             </div>
@@ -185,7 +185,7 @@
                                                                     <thead>
                                                                         <tr>
                                                                             <th> Description </th>
-                                                                            <th> Total </th>
+                                                                            <!-- <th> Total </th> -->
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -198,15 +198,15 @@
                                                                                     <?php echo $isvalsor["otherfees"]; ?> 
                                                                                 </div>
                                                                             </td>
-                                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                                            <!-- <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td> -->
                                                                         </tr>
                                                                     <?php } ?>
                                                                     </tbody>
                                                                     <thead>
-                                                                        <tr>
+                                                                        <!-- <tr>
                                                                             <th> Total </th>
                                                                             <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
-                                                                        </tr>
+                                                                        </tr> -->
                                                                     </thead>
                                                                 </table>
                                                             </div>
@@ -218,8 +218,8 @@
                                                                             <th> # </th>
                                                                             <th> Length </th>
                                                                             <th> Pieces </th>
-                                                                            <th> Price </th>
-                                                                            <th> Total </th>
+                                                                            <!-- <th> Price </th> -->
+                                                                            <!-- <th> Total </th> -->
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -230,19 +230,19 @@
                                                                             <td><?php echo $inorderkey; ?></td>
                                                                             <td><?php echo $isvalsor["dolenth"]; ?>m </td>
                                                                             <td><?php echo $isvalsor['length']; ?> </td>
-                                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
-                                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                                            <!-- <td>₱ <?php echo $isvalsor['baseprice']; ?> </td> -->
+                                                                            <!-- <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td> -->
                                                                         </tr>
                                                                     <?php } ?>
                                                                     </tbody>
                                                                     <thead>
-                                                                        <tr>
+                                                                        <!-- <tr>
                                                                             <th> &nbsp; </th>
                                                                             <th> &nbsp; </th>
                                                                             <th> &nbsp; </th>
                                                                             <th> Total </th>
                                                                             <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
-                                                                        </tr>
+                                                                        </tr> -->
                                                                     </thead>
                                                                 </table>
                                                             </div>

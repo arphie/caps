@@ -460,7 +460,7 @@
 		public static function getAccounts($client)
 		{
 			$listofdata = [];
-			if ($result=mysqli_query(self::connectme(),"select * from accounts")){
+			if ($result=mysqli_query(self::connectme(),"select * from accounts where clientid = ".$client)){
 				// // Fetch one and one row
 				while ($row=mysqli_fetch_assoc($result))
 				{
