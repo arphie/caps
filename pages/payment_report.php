@@ -61,10 +61,61 @@
                                         <?php
                                             $details = unserialize($value['order_specs']);
                                         ?>
-                                        <pre>
-                                            <?php print_r($details); ?>
-                                        </pre>
+                                        
                                         <?php foreach($details['ord'] as $orderitemkey => $orderitemvalue): ?>
+                                        <h4><?php echo $orderitemvalue['ordertype']; ?></h4>
+                                        <div class="table-scrollable">
+                                            <table class="table table-hover table-light">
+                                                <tbody>
+                                                    <?php if($orderitemvalue['ordertype'] == "plainsheet"): ?>
+                                                        <tr>
+                                                            <td><strong>Pieces</strong></td>
+                                                            <td><?php echo $details['ord'][$orderitemkey]["basepieces"]; ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Color</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["colorofitem"]); ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Size</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["getsizeofprofile"]); ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Total Price</strong></td>
+                                                            <td><?php echo $details['ord'][$orderitemkey]["baseprice"]; ?> </td>
+                                                        </tr>
+                                                    <?php elseif($orderitemvalue['ordertype'] == "hardware"): ?>
+                                                    <?php elseif($orderitemvalue['ordertype'] == "other"): ?>
+                                                    <?php elseif($orderitemvalue['ordertype'] == "bended"): ?>
+                                                        <tr>
+                                                            <td><strong>Pieces</strong></td>
+                                                            <td><?php echo $details['ord'][$orderitemkey]["basepieces"]; ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Color</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["colorofitem"]); ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Size</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["getsizeofprofile"]); ?> </td>
+                                                        </tr>
+                                                    <?php else: ?>
+                                                        <tr>
+                                                            <td><strong>Profile</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["profile"]); ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Color</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["color"]); ?> </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Size</strong></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($details['ord'][$orderitemkey]["size"]); ?> </td>
+                                                        </tr>
+                                                    <?php endif; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <?php if($orderitemvalue['ordertype'] == "hardware"): ?>
                                             <div class="table-scrollable">
                                                 <table class="table table-hover table-light">
