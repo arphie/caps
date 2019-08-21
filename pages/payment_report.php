@@ -64,11 +64,168 @@
                                         <pre>
                                             <?php print_r($details); ?>
                                         </pre>
-                                        <?php foreach($details['ord'] as $inkey => $inval): ?>
-                                            <!-- <div>
-                                                Type: <?php echo $inval['ordertype']; ?><br />
-                                                Total: <?php echo $inval['ordertype']; ?><br />
-                                            </div> -->
+                                        <?php foreach($details['ord'] as $inkey => $orderitemvalue): ?>
+                                        <?php if($orderitemvalue['ordertype'] == "hardware"): ?>
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover table-light">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Pieces </th>
+                                                            <th> Type </th>
+                                                            <th> Price </th>
+                                                            <th> Total </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php $total = 0; ?>
+                                                    <?php foreach($orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                        <?php $total += $isvalsor['dtotalprice']; ?>
+                                                        <tr>
+                                                            <td><?php echo $inorderkey; ?></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($isvalsor["hardwareparts"]); ?> </td>
+                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
+                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                    <thead>
+                                                        <tr>
+                                                            <th> &nbsp; </th>
+                                                            <th> &nbsp; </th>
+                                                            <th> Total </th>
+                                                            <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        <?php elseif($orderitemvalue['ordertype'] == "bended"): ?>
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover table-light">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Pieces </th>
+                                                            <th> Bended to </th>
+                                                            <th> Price </th>
+                                                            <th> Total </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php $total = 0; ?>
+                                                    <?php foreach($orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                        <?php $total += $isvalsor['dtotalprice']; ?>
+                                                        <tr>
+                                                            <td><?php echo $inorderkey; ?></td>
+                                                            <td><?php echo $metaData::getspecificmetavalue($isvalsor["bendedto"]); ?> </td>
+                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
+                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                    <thead>
+                                                        <tr>
+                                                            <th> &nbsp; </th>
+                                                            <th> &nbsp; </th>
+                                                            <th> Total </th>
+                                                            <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        <?php elseif($orderitemvalue['ordertype'] == "other"): ?>
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover table-light">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Description </th>
+                                                            <th> Total </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php $total = 0; ?>
+                                                    <?php foreach($orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                        <?php $total += $isvalsor['dtotalprice']; ?>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="dothermessage">
+                                                                    <?php echo $isvalsor["otherfees"]; ?> 
+                                                                </div>
+                                                            </td>
+                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Total </th>
+                                                            <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        <?php elseif($orderitemvalue['ordertype'] == "panel"): ?>
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover table-light">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> # </th>
+                                                            <th> Length </th>
+                                                            <th> Pieces </th>
+                                                            <th> Price </th>
+                                                            <th> Total </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php $total = 0; ?>
+                                                    <?php foreach(@$orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                        <?php $total += $isvalsor['dtotalprice']; ?>
+                                                        <tr>
+                                                            <td><?php echo $inorderkey; ?></td>
+                                                            <td><?php echo $isvalsor["dolenth"]; ?>m </td>
+                                                            <td><?php echo $isvalsor['length']; ?> </td>
+                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
+                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                    <thead>
+                                                        <tr>
+                                                            <th> &nbsp; </th>
+                                                            <th> &nbsp; </th>
+                                                            <th> &nbsp; </th>
+                                                            <th> Total </th>
+                                                            <th> ₱ <?php echo number_format($total,2,".",","); ?> </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if(@$_GET['todo'] == 'adjust'): ?>
+                                            <div class="dadjustpart">
+                                                <div class="dadjinner">
+                                                    <div class="form-group form-md-line-input">
+                                                        <textarea class="form-control" rows="3" placeholder="Adjustment Details" name="ajd[<?php echo $orderitemkey; ?>][adjnote]"><?php echo @$orderitemvalue['ajsinfo']['ajd'][$orderitemkey]['adjnote']; ?></textarea>
+                                                    </div>
+                                                    <div class="form-group form-md-line-input">
+                                                        <input type="text" class="form-control" id="form_control_1" placeholder="New Total" name="ajd[<?php echo $orderitemkey; ?>][adjtotal]" value="<?php echo @$orderitemvalue['ajsinfo']['ajd'][$orderitemkey]['adjtotal']; ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if(isset($orderitemvalue['ajsinfo'])): ?>
+                                            <?php $infoitem = $orderitemvalue['ajsinfo']['ajd'][$orderitemkey]; ?>
+                                            <?php if($infoitem['adjtotal'] != ""): ?>
+                                                <ul>
+                                                    <li>
+                                                        <div class="ajlabel notelabel">Total:</div>
+                                                        <div class="ajitem noteitem"><?php echo $infoitem['adjtotal']; ?></div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="ajlabel notelabel">Remarks:</div>
+                                                        <div class="ajitem noteitem"><?php echo $infoitem['adjnote']; ?></div>
+                                                    </li>
+                                                </ul>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                         <?php endforeach; ?>
                                     </td>
                                 </tr>
