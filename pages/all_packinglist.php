@@ -41,6 +41,7 @@
                                 <th style="width: 60px;"> ID </th>
                                 <th> Client Name </th>
                                 <th> Total</th>
+                                <th> Balance</th>
                                 <th> Status</th>
                                 <th style="width: 200px;"> Actions </th>
                             </tr>
@@ -48,7 +49,7 @@
                         <tbody>
                             <?php
                             
-                                foreach ($client::getallpackinglist() as $key => $value) {
+                                foreach ($client::getpendingpackinglist() as $key => $value) {
                                     $orderinfo = unserialize($value['order_specs']);
                                     $totalmon = 0;
                                     foreach($orderinfo['stims'] as $orkeyb => $orvalb){
@@ -61,6 +62,7 @@
                                         <td><?php echo $value['order_id']; ?></td>
                                         <td><?php echo $client::getclientbyid($value['order_client']); ?></td>
                                         <td>Php <?php echo number_format($value['order_total'],2,".",","); ?></td>
+                                        <td>Php <?php echo number_format($value['ord_balance'],2,".",","); ?></td>
                                         <td><?php echo ($value['isstatus'] == "1" ? "Paid" : "Pending"); ?></td>
                                         <td>
                                             <a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $value['order_id']; ?>" class="btn blue">View More</a>

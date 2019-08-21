@@ -271,7 +271,25 @@
 		{
 			$listofdata = [];
 
-			if ($result=mysqli_query(self::connectme(),"select * from packinglist")){
+			if ($result=mysqli_query(self::connectme(),"select * from packinglist ")){
+				// // Fetch one and one row
+				while ($row=mysqli_fetch_assoc($result))
+				{
+					// print_r($row);
+					array_push($listofdata, $row);
+				}
+				// Free result set
+				mysqli_free_result($result);
+			}
+
+			return $listofdata;
+		}
+
+		public static function getpendingpackinglist()
+		{
+			$listofdata = [];
+
+			if ($result=mysqli_query(self::connectme(),"select * from packinglist where isstatus = 0")){
 				// // Fetch one and one row
 				while ($row=mysqli_fetch_assoc($result))
 				{

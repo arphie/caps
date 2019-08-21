@@ -95,7 +95,7 @@
                                     </a>
                                     <ul class="dropdown-menu pull-right">
                                         <li>
-                                            <a href="#" class="printpl">
+                                            <a href="#" class="">
                                                 <i class="i"></i> Print Packing List</a>
                                         </li>
                                         <li class="divider"> </li>
@@ -283,6 +283,7 @@
                                                                             <th> # </th>
                                                                             <th> Length </th>
                                                                             <th> Pieces </th>
+                                                                            <th> Total Length </th>
                                                                             <th> Price </th>
                                                                             <th> Total </th>
                                                                         </tr>
@@ -295,6 +296,7 @@
                                                                             <td><?php echo $inorderkey; ?></td>
                                                                             <td><?php echo $isvalsor["dolenth"]; ?>m </td>
                                                                             <td><?php echo $isvalsor['length']; ?> </td>
+                                                                            <td><?php echo $isvalsor["dolenth"] * $isvalsor['length']; ?>m</td>
                                                                             <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
                                                                             <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
                                                                         </tr>
