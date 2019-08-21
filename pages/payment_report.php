@@ -64,7 +64,7 @@
                                         <pre>
                                             <?php print_r($details); ?>
                                         </pre>
-                                        <?php foreach($details['ord'] as $inkey => $orderitemvalue): ?>
+                                        <?php foreach($details['ord'] as $orderitemkey => $orderitemvalue): ?>
                                         <?php if($orderitemvalue['ordertype'] == "hardware"): ?>
                                             <div class="table-scrollable">
                                                 <table class="table table-hover table-light">
@@ -78,15 +78,17 @@
                                                     </thead>
                                                     <tbody>
                                                     <?php $total = 0; ?>
-                                                    <?php foreach($orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
-                                                        <?php $total += $isvalsor['dtotalprice']; ?>
-                                                        <tr>
-                                                            <td><?php echo $inorderkey; ?></td>
-                                                            <td><?php echo $metaData::getspecificmetavalue($isvalsor["hardwareparts"]); ?> </td>
-                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
-                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
-                                                        </tr>
-                                                    <?php } ?>
+                                                    <?php if(isset($details['stims'][$orderitemkey])): ?>
+                                                        <?php foreach($details['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                            <?php $total += $isvalsor['dtotalprice']; ?>
+                                                            <tr>
+                                                                <td><?php echo $inorderkey; ?></td>
+                                                                <td><?php echo $metaData::getspecificmetavalue($isvalsor["hardwareparts"]); ?> </td>
+                                                                <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
+                                                                <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    <?php endif; ?>
                                                     </tbody>
                                                     <thead>
                                                         <tr>
@@ -111,7 +113,8 @@
                                                     </thead>
                                                     <tbody>
                                                     <?php $total = 0; ?>
-                                                    <?php foreach($orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                    <?php if(isset($details['stims'][$orderitemkey])): ?>
+                                                    <?php foreach($details['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
                                                         <?php $total += $isvalsor['dtotalprice']; ?>
                                                         <tr>
                                                             <td><?php echo $inorderkey; ?></td>
@@ -120,6 +123,7 @@
                                                             <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
                                                         </tr>
                                                     <?php } ?>
+                                                    <?php endif; ?>
                                                     </tbody>
                                                     <thead>
                                                         <tr>
@@ -142,7 +146,8 @@
                                                     </thead>
                                                     <tbody>
                                                     <?php $total = 0; ?>
-                                                    <?php foreach($orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                    <?php if(isset($details['stims'][$orderitemkey])): ?>
+                                                    <?php foreach($details['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
                                                         <?php $total += $isvalsor['dtotalprice']; ?>
                                                         <tr>
                                                             <td>
@@ -153,6 +158,7 @@
                                                             <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
                                                         </tr>
                                                     <?php } ?>
+                                                    <?php endif; ?>
                                                     </tbody>
                                                     <thead>
                                                         <tr>
@@ -176,16 +182,19 @@
                                                     </thead>
                                                     <tbody>
                                                     <?php $total = 0; ?>
-                                                    <?php foreach(@$orderitemvalue['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
-                                                        <?php $total += $isvalsor['dtotalprice']; ?>
-                                                        <tr>
-                                                            <td><?php echo $inorderkey; ?></td>
-                                                            <td><?php echo $isvalsor["dolenth"]; ?>m </td>
-                                                            <td><?php echo $isvalsor['length']; ?> </td>
-                                                            <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
-                                                            <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
-                                                        </tr>
-                                                    <?php } ?>
+                                                    
+                                                    <?php if(isset($details['stims'][$orderitemkey])): ?>
+                                                        <?php foreach($details['stims'][$orderitemkey] as $inorderkey => $isvalsor) { ?>
+                                                            <?php $total += $isvalsor['dtotalprice']; ?>
+                                                            <tr>
+                                                                <td><?php echo $inorderkey; ?></td>
+                                                                <td><?php echo $isvalsor["dolenth"]; ?>m </td>
+                                                                <td><?php echo $isvalsor['length']; ?> </td>
+                                                                <td>₱ <?php echo $isvalsor['baseprice']; ?> </td>
+                                                                <td>₱ <?php echo number_format($isvalsor['dtotalprice'],2,".",","); ?> </td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    <?php endif; ?>
                                                     </tbody>
                                                     <thead>
                                                         <tr>
@@ -203,16 +212,16 @@
                                             <div class="dadjustpart">
                                                 <div class="dadjinner">
                                                     <div class="form-group form-md-line-input">
-                                                        <textarea class="form-control" rows="3" placeholder="Adjustment Details" name="ajd[<?php echo $orderitemkey; ?>][adjnote]"><?php echo @$orderitemvalue['ajsinfo']['ajd'][$orderitemkey]['adjnote']; ?></textarea>
+                                                        <textarea class="form-control" rows="3" placeholder="Adjustment Details" name="ajd[<?php echo $orderitemkey; ?>][adjnote]"><?php echo @$details['ajsinfo']['ajd'][$orderitemkey]['adjnote']; ?></textarea>
                                                     </div>
                                                     <div class="form-group form-md-line-input">
-                                                        <input type="text" class="form-control" id="form_control_1" placeholder="New Total" name="ajd[<?php echo $orderitemkey; ?>][adjtotal]" value="<?php echo @$orderitemvalue['ajsinfo']['ajd'][$orderitemkey]['adjtotal']; ?>">
+                                                        <input type="text" class="form-control" id="form_control_1" placeholder="New Total" name="ajd[<?php echo $orderitemkey; ?>][adjtotal]" value="<?php echo @$details['ajsinfo']['ajd'][$orderitemkey]['adjtotal']; ?>">
                                                     </div>
                                                 </div>
                                             </div>
                                         <?php endif; ?>
-                                        <?php if(isset($orderitemvalue['ajsinfo'])): ?>
-                                            <?php $infoitem = $orderitemvalue['ajsinfo']['ajd'][$orderitemkey]; ?>
+                                        <?php if(isset($details['ajsinfo'])): ?>
+                                            <?php $infoitem = $details['ajsinfo']['ajd'][$orderitemkey]; ?>
                                             <?php if($infoitem['adjtotal'] != ""): ?>
                                                 <ul>
                                                     <li>
