@@ -24,11 +24,32 @@
                 unset($specs['dclient']);
                 unset($specs['Submit']);
             ?>
+            <!-- <pre>
+                <?php print_r($specs); ?>
+            </pre> -->
             <?php
+                
+
                 if (isset($_POST['dsubsdd'])) {
                     unset($_POST['dsubsdd']);
                     $specs['ajsinfo'] = $_POST;
                     $client::updateadjustment($specs, $packingdata['order_id']);
+
+                    // echo $totalprice;
+
+                    // adjust price
+                    $newtotal = 0;
+                    foreach ($specs['ajsinfo']['ajd'] as $key => $value) {
+                        // echo '<br />'.$value['adjtotal'];
+                        $newtotal = $newtotal + ($value['adjtotal'] != "" ? $value['adjtotal'] : 0);
+                    }
+
+                    // echo $newtotal;
+
+                    //refundable
+                    $drefundable = $newtotal - $totalprice;
+                    $client::updateAccount($drefundable, $packingdata['order_client']);
+                    // echo $newtotal - $totalprice;
 
                     // header("location: ".BASELINK."/index.php?page=all_payment");
                 }
@@ -109,7 +130,7 @@
                     <?php if(@$_GET['view'] != "paid"): ?>
                     <div class="portlet light profile-sidebar-portlet ">
                         <div class="addpayment" style="padding:0 15px 5px;">
-                                
+                            <form action="" method="post">
                                     <div class="form-group form-md-line-input has-info" style="margin-bottom:5px;">
                                         <select class="form-control" id="paymentmethon" name="pmethod">
                                             <option value="">Select Payment Method</option>
@@ -162,7 +183,7 @@
                                         </div>
                                         <div class="form-group form-md-line-input">
                                             <input type="text" name="pcheckamount" value="" class="form-control" placeholder="">
-                                            <label for="form_control_1">Amount</label>
+                                            <label for="form_controls_1">Amount</label>
                                         </div>
                                     </div>
                                 </div> 
@@ -204,6 +225,11 @@
                 </div>
                 
                 <div class="col-md-8">
+                <?php
+                    if (isset($specs['ajsinfo'])) {
+                        
+                    }
+                ?>
                     <form action="" method="post">
                     <div class="portlet light portlet-fit ">
                         <div class="portlet-title">
@@ -212,6 +238,7 @@
                                 <span class="caption-subject bold font-green uppercase">(Total: ₱ <?php echo number_format($totalprice,2,".",","); ?>)</span>
                                 <!-- <span class="caption-helper">user timeline</span> -->
                             </div>
+                            <?php if(!isset($specs['ajsinfo'])): ?>
                             <div class="actions" style="margin-left:10px;">
                                 <div class="btn-group">
                                 <?php if(@$_GET['todo'] == 'adjust'): ?>
@@ -220,6 +247,7 @@
                                     <!-- <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;"> Submit </a> -->
                                 </div>
                             </div>
+                            
                             <?php if(isset($_GET['view']) && $_GET['view'] == 'paid'): ?>
                                 <div class="actions">
                                     <div class="btn-group">
@@ -231,6 +259,27 @@
                                                 <a href="<?php echo $baseline; ?>/index.php?page=view_payment&pid=<?php echo $_GET['pid']; ?>&view=paid&todo=adjust">
                                                     <i class="i"></i> Adjust Packing List</a>
                                             </li>
+                                            <!-- <li class="divider"> </li>
+                                            <li>
+                                                <a href="<?php echo $baseline; ?>/index.php?page=view_jo&pid=<?php echo $_GET['pid']; ?>">View Job Orber</a>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <?php else: ?>
+                            <div class="actions">
+                                    <div class="btn-group">
+                                        <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true"> Actions
+                                            <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li>
+                                                <!-- <a href="<?php echo $baseline; ?>/index.php?page=view_payment&pid=<?php echo $_GET['pid']; ?>&view=paid"> -->
+                                                <a href="#" class="printorder">
+                                                    <i class="i"></i> Print Order</a>
+                                            </li>
+
                                             <!-- <li class="divider"> </li>
                                             <li>
                                                 <a href="<?php echo $baseline; ?>/index.php?page=view_jo&pid=<?php echo $_GET['pid']; ?>">View Job Orber</a>
@@ -450,13 +499,28 @@
                                                             <div class="dadjustpart">
                                                                 <div class="dadjinner">
                                                                     <div class="form-group form-md-line-input">
-                                                                        <textarea class="form-control" rows="3" placeholder="Adjustment Details" name="ajd[<?php echo $orderitemkey; ?>][adjnote]"><?php echo $specs['ajsinfo']['ajd'][$orderitemkey]['adjnote']; ?></textarea>
+                                                                        <textarea class="form-control" rows="3" placeholder="Adjustment Details" name="ajd[<?php echo $orderitemkey; ?>][adjnote]"><?php echo @$specs['ajsinfo']['ajd'][$orderitemkey]['adjnote']; ?></textarea>
                                                                     </div>
                                                                     <div class="form-group form-md-line-input">
-                                                                        <input type="text" class="form-control" id="form_control_1" placeholder="New Total" name="ajd[<?php echo $orderitemkey; ?>][adjtotal]" value="<?php echo $specs['ajsinfo']['ajd'][$orderitemkey]['adjtotal']; ?>">
+                                                                        <input type="text" class="form-control" id="form_control_1" placeholder="New Total" name="ajd[<?php echo $orderitemkey; ?>][adjtotal]" value="<?php echo @$specs['ajsinfo']['ajd'][$orderitemkey]['adjtotal']; ?>">
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        <?php endif; ?>
+                                                        <?php if(isset($specs['ajsinfo'])): ?>
+                                                            <?php $infoitem = $specs['ajsinfo']['ajd'][$orderitemkey]; ?>
+                                                            <?php if($infoitem['adjtotal'] != ""): ?>
+                                                                <ul>
+                                                                    <li>
+                                                                        <div class="ajlabel notelabel">Total:</div>
+                                                                        <div class="ajitem noteitem"><?php echo $infoitem['adjtotal']; ?></div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="ajlabel notelabel">Remarks:</div>
+                                                                        <div class="ajitem noteitem"><?php echo $infoitem['adjnote']; ?></div>
+                                                                    </li>
+                                                                </ul>
+                                                            <?php endif; ?>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -484,6 +548,14 @@
             console.log("herer");
         });
         $(".printpl").click(function(e){
+            e.preventDefault();
+            // window.print();
+
+            $.print(".printable"); 
+        });
+
+        //printorder
+        $(".printorder").click(function(e){
             e.preventDefault();
             // window.print();
 

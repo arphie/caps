@@ -26,9 +26,9 @@
         </ul>
         <div class="">
             <?php $clientinfo = $client::getclientinfobyid($_GET['cid']); ?>
-            <pre>
+            <!-- <pre>
                 <?php print_r($_POST); ?>
-            </pre>
+            </pre> -->
             <?php
                 if (isset($_POST['Submit'])) {
                     $client::addFunds($_POST, $_GET['cid']);
@@ -135,6 +135,73 @@
                                 </div>
                             </div>
                         <?php endif; ?>
+                    </div>
+                    <br class="clear">
+                    <div class="col-md-12">
+                        <div class="daccounts">
+                            <div class="dinneraccounts">
+                                <div class="portlet box blue-hoki">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-gift"></i>Accounts Information</div>
+                                        <!-- <div class="actions">
+                                            <a href="javascript:;" class="btn btn-default btn-sm">
+                                                <i class="fa fa-pencil"></i> Edit </a>
+                                            <a href="javascript:;" class="btn btn-default btn-sm">
+                                                <i class="fa fa-plus"></i> Add </a>
+                                        </div> -->
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="inner-body">
+                                            <?php
+                                                $onsound = $client::getAccounts($_GET['cid']);
+                                            ?>
+                                            <div class="portlet box blue">
+                                                <div class="portlet-title">
+                                                    <div class="caption">
+                                                        <i class="fa fa-comments"></i>Contextual Rows </div>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="table-scrollable">
+                                                        <table class="table table-bordered table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th> Ammount </th>
+                                                                    <th> Balance </th>
+                                                                    <th> From </th>
+                                                                    <th> Used in </th>
+                                                                    <th> Remarks </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach ($onsound as $key => $value) { ?>
+                                                                    <tr class="">
+                                                                        <td>₱<?php echo number_format($value['amount'], 2, '.', ','); ?> </td>
+                                                                        <td>₱<?php echo number_format($value['abalance'], 2, '.', ','); ?> </td>
+                                                                        <td> <?php echo $value['dtype']; ?> </td>
+                                                                        <td>
+                                                                            <?php if($value['usedin'] != ""): ?>
+                                                                            <?php $usedin = unserialize($value['usedin']); ?>
+                                                                                <ul>
+                                                                                    <?php foreach ($usedin as $usedkey => $usedvalue): ?>
+                                                                                        <li><a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $usedvalue; ?>"><?php echo $usedvalue; ?></a></li>
+                                                                                    <?php endforeach; ?>
+                                                                                </ul>
+                                                                            <?php endif; ?>
+                                                                        </td>
+                                                                        <td> <?php echo $value['premarks']; ?> </td>
+                                                                    </tr>
+                                                                <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <br class="clear">
                     <div class="form-actions noborder">

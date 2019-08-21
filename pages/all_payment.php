@@ -29,8 +29,15 @@
                     <div class="caption">
                         <i class="fa fa-user"></i>List of Packing List </div>
                     <div class="actions">
-                        <a href="<?php echo $baseline; ?>/index.php?page=all_payment&view=paid" class="btn default btn-sm">
-                            <i class="fa fa-user-plus icon-black"></i> View Paid Packing list </a>
+                        <?php if(isset($_GET['view']) && $_GET['view'] == 'paid'): ?>
+                            <a href="<?php echo $baseline; ?>/index.php?page=payment_report" class="btn default btn-sm">
+                                <i class="fa fa-user-plus icon-black"></i> View Payment Report </a>
+                                <a href="<?php echo $baseline; ?>/index.php?page=all_payment" class="btn default btn-sm">
+                                <i class="fa fa-user-plus icon-black"></i> View Pending Packing list </a>
+                        <?php else: ?>
+                            <a href="<?php echo $baseline; ?>/index.php?page=all_payment&view=paid" class="btn default btn-sm">
+                                <i class="fa fa-user-plus icon-black"></i> View Paid Packing list </a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 

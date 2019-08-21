@@ -52,7 +52,7 @@
                                         <td><?php echo $value['prof_id']; ?></td>
                                         <td><?php echo $value['prof_name']; ?></td>
                                         <td>
-                                            <!-- <a href="<?php echo $baseline; ?>/index.php?page=profile&id=<?php echo $value['prof_id']; ?>" class="btn blue btn-block">See More</a> -->  
+                                            <a href="<?php echo $baseline; ?>/index.php?page=view_profiles&id=<?php echo $value['prof_id']; ?>" class="btn blue btn-block">See More</a>  
                                         </td>
                                     </tr>
 

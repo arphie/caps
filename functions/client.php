@@ -65,6 +65,26 @@
 			header("location: ".BASELINK."/index.php?page=all_profiles");
 		}
 
+		public static function updateprofile($post)
+		{
+			// print_r($post);
+			$profilename = $post['profname'];
+
+			//filter to show only the sizes
+			unset($post['profname']);
+			unset($post['Submit']);
+
+			$baseproducts = serialize($post);
+
+			// $sql = "insert into profile (prof_name, prof_base) values ('".$profilename."', '".$baseproducts."')";
+			$sql = "update profile set prof_base = '".$baseproducts."' where prof_id = ".$post['pid'];
+			// echo $sql;
+
+			mysqli_query(self::connectme(),$sql);
+
+			header("location: ".BASELINK."/index.php?page=view_profiles&id=".$post['pid']);
+		}
+
 		public static function getprofiles()
 		{
 			$listofdata = [];
@@ -191,7 +211,7 @@
 					array_push($used, $post['orderid']);
 				}
 				
-				$remaining = $info['ord_balance'] - $accountinfo['pallabalance'];
+				$remaining = $info['ord_balance'] - $accountinfo['abalance'];
 				$abalance = $accountinfo['abalance'] - $info['ord_balance'];
 				$payamount = ($remaining <= 0 ? $info['ord_balance'] : $remaining);
 				if($abalance > 0){
@@ -210,14 +230,14 @@
 				$sql2 = "insert into payment (order_id, payamount, paytype, pmethod, pdetails, pdate) values ('".$post['orderid']."', '".$payamount."', 'full', '".$post['pmethod']."', '".serialize($details)."', '".date('m/d/Y h:i:s a')."')";
 				mysqli_query(self::connectme(),$sql);
 				mysqli_query(self::connectme(),$sql2);
-				header("location: ".BASELINK."/index.php?page=all_payment");
+				// header("location: ".BASELINK."/index.php?page=all_payment");
 			} elseif($remaining > 0){
 				// partially paid
 				$sql = 'update packinglist set ord_balance = "'.$remaining.'" where order_id = '.$post['orderid'];
 				$sql2 = "insert into payment (order_id, payamount, paytype, pmethod, pdetails, pdate) values ('".$post['orderid']."', '".$payamount."', 'partial', '".$post['pmethod']."', '".serialize($details)."', '".date('m/d/Y h:i:s a')."')";
 				mysqli_query(self::connectme(),$sql);
 				mysqli_query(self::connectme(),$sql2);
-				header("location: ".BASELINK."/index.php?page=view_payment");
+				// header("location: ".BASELINK."/index.php?page=view_payment");
 			}
 		}
 
@@ -239,12 +259,12 @@
 			return $listofdata;
 		}
 
-		public function addFunds($post, $id)
+		public static function addFunds($post, $id)
 		{
 			date_default_timezone_set('Asia/Manila');
-			$sql = "insert into accounts (clientid, amount, abalance, dtype, dmode, premarks, ddate) values ('".$id."', '".$post['clamount']."', '".$post['clamount']."', '".$post['paymenttype']."', '".$post['modepayment']."', '".$post['remarks']."', '".date('m/d/Y h:i:s a')."')";
+			$sql = "insert into accounts (clientid, amount, abalance, dtype, dmode, premarks, ddate, usedin) values ('".$id."', '".$post['clamount']."', '".$post['clamount']."', '".$post['paymenttype']."', '".$post['modepayment']."', '".$post['remarks']."', '".date('m/d/Y h:i:s a')."', '')";
 			mysqli_query(self::connectme(),$sql);
-			header("location: ".BASELINK."/index.php?page=view_client&cid=".$id."&mode=add_money");
+			// header("location: ".BASELINK."/index.php?page=view_client&cid=".$id."&mode=add_money");
 		}
 
 		public static function getallpackinglist()
@@ -430,7 +450,47 @@
 			mysqli_query(self::connectme(), 'update packinglist set order_specs = \''.serialize($post).'\' where order_id = '.$id);
 		}
 
-		
+		public static function updateAccount($newmoney, $id)
+		{
+			$ammount = abs($newmoney);
+			$qusst =  "insert into accounts (clientid, amount, abalance, dtype, dmode, premarks, ddate, usedin) values ('".$id."', '".$ammount."', '".$ammount."', 'refund', 'refund', 'refundable', '".date('m/d/Y h:i:s a')."', '')";
+			mysqli_query(self::connectme(), $qusst);
+		}
+
+		public static function getAccounts($client)
+		{
+			$listofdata = [];
+			if ($result=mysqli_query(self::connectme(),"select * from accounts")){
+				// // Fetch one and one row
+				while ($row=mysqli_fetch_assoc($result))
+				{
+					// print_r($row);
+					array_push($listofdata, $row);
+				}
+				// Free result set
+				mysqli_free_result($result);
+			}
+
+			return $listofdata;
+		}
+
+		public static function pullprofiles($profileid)
+		{	
+			$listofdata = "";
+			if ($result=mysqli_query(self::connectme(),"select * from profile where prof_id = ".$profileid)){
+				// // Fetch one and one row
+				while ($row=mysqli_fetch_assoc($result))
+				{
+					// print_r($row);
+					$listofdata = $row;
+					// array_push($listofdata, $row);
+				}
+				// Free result set
+				mysqli_free_result($result);
+			}
+
+			return $listofdata;
+		}
 
 	}
 ?>

@@ -71,6 +71,10 @@
             $client::saveprofiles($_POST);
         }
 
+        if(isset($_GET) && $dpage == 'view_profiles'){
+            $client::updateprofile($_POST);
+        }
+
         if(isset($_GET) && $dpage == 'add_client'){
             $client::saveclient($_POST);
         }
