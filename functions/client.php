@@ -151,8 +151,8 @@
 					$totalprice += $totssval['baseprice'];
 				}
 			}
-			$sql = "insert into packinglist (order_client, order_specs, order_total, ord_balance, plnumber, date) values ('".$post['clientid']."', '".serialize($post)."', '".$totalprice."', '".$totalprice."', ".$post['plnumber'].", '".date("Y-m-d h:i:sa")."')";
-			
+			$sql = "insert into packinglist (order_client, order_specs, order_total, ord_balance, plnumber, date) values ('".$post['clientid']."', '".serialize($post)."', '".$totalprice."', '".$totalprice."', '".$post['plnumber']."', '".date("Y-m-d h:i:sa")."')";
+			// echo $sql;
 			mysqli_query(self::connectme(),$sql);
 
 			header("location: ".BASELINK."/index.php?page=all_packinglist");
