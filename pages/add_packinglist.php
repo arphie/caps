@@ -47,6 +47,11 @@
                             </div>
 
                                 <div class="portlet-body">
+                                    <div class="form-group form-md-line-input font-black">
+                                        <input type="text" class="form-control" placeholder="####-####" id="plnumber" name="plnumber">
+                                        <label for="form_control_1">PL Number</label>
+                                        <span class="help-block">Some help goes here...</span>
+                                    </div>
                                     <div class="form-group form-md-line-input has-info">
                                         <select class="form-control" id="plclientname" name="clientid">
                                             <option value=""></option>
@@ -70,6 +75,7 @@
                                         <label for="form_control_1">Client Address</label>
                                         <span class="help-block">Some help goes here...</span>
                                     </div>
+                                    
                                     <input type="hidden" id="ispage" name="page" value='<?php echo $_GET['page']; ?>'>
                                     <input type="hidden" id="isdisdata" name="isdisdata" value="">
                                     <input type="submit" name="selected_client" value="Select Client">
@@ -490,6 +496,7 @@
                     </div>
                     <br class="clear">
                     <div class="form-actions noborder">
+                        <input type="hidden" name="plnumber" id="plnumberval">
                         <input type="hidden" name="clientid" value="<?php echo @$_GET['clientid']; ?>">
                         <input type="submit" class="btn blue" name="Submit">
                         <a href="<?php echo $baseline; ?>/index.php?page=all_clients" class="btn default">Cancel</a>
@@ -528,6 +535,11 @@
 
 
             // $(this).parents('.orderitem').find('#baseprice').val($ddiscount);
+        });
+
+        $("#plnumber").keyup(function( event ) {
+            var dproes = $(this).val();
+            $("#plnumberval").val(dproes);
         });
         
     });

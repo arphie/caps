@@ -138,6 +138,7 @@
 
 		public static function savepacking($post)
 		{
+			date_default_timezone_set("Asia/Manila");
 			$totalprice = 0;
 			foreach($post['stims'] as $totskey => $totsval){
 				foreach($totsval as $totinskey => $totinsval){
@@ -150,8 +151,8 @@
 					$totalprice += $totssval['baseprice'];
 				}
 			}
-			$sql = "insert into packinglist (order_client, order_specs, order_total, ord_balance) values ('".$post['clientid']."', '".serialize($post)."', '".$totalprice."', '".$totalprice."')";
-
+			$sql = "insert into packinglist (order_client, order_specs, order_total, ord_balance, plnumber, date) values ('".$post['clientid']."', '".serialize($post)."', '".$totalprice."', '".$totalprice."', ".$post['plnumber'].", '".date("Y-m-d h:i:sa")."')";
+			
 			mysqli_query(self::connectme(),$sql);
 
 			header("location: ".BASELINK."/index.php?page=all_packinglist");
@@ -326,6 +327,24 @@
 			$listofdata = [];
 
 			if ($result=mysqli_query(self::connectme(),"select * from packinglist where isstatus = '1'")){
+				// // Fetch one and one row
+				while ($row=mysqli_fetch_assoc($result))
+				{
+					// print_r($row);
+					array_push($listofdata, $row);
+				}
+				// Free result set
+				mysqli_free_result($result);
+			}
+
+			return $listofdata;
+		}
+
+		public static function getPackingListPerClient($clientid)
+		{
+			$listofdata = [];
+
+			if ($result=mysqli_query(self::connectme(),"select * from packinglist where order_client = '".$clientid."'")){
 				// // Fetch one and one row
 				while ($row=mysqli_fetch_assoc($result))
 				{

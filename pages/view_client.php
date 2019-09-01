@@ -156,47 +156,157 @@
                                             <?php
                                                 $onsound = $client::getAccounts($_GET['cid']);
                                             ?>
-                                            <div class="portlet box blue">
-                                                <div class="portlet-title">
-                                                    <div class="caption">
-                                                        <i class="fa fa-comments"></i>Contextual Rows </div>
-                                                </div>
-                                                <div class="portlet-body">
-                                                    <div class="table-scrollable">
-                                                        <table class="table table-bordered table-hover">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th> Ammount </th>
-                                                                    <th> Balance </th>
-                                                                    <th> From </th>
-                                                                    <th> Used in </th>
-                                                                    <th> Remarks </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php foreach ($onsound as $key => $value) { ?>
-                                                                    <tr class="">
-                                                                        <td>₱<?php echo number_format($value['amount'], 2, '.', ','); ?> </td>
-                                                                        <td>₱<?php echo number_format($value['abalance'], 2, '.', ','); ?> </td>
-                                                                        <td> <?php echo $value['dtype']; ?> </td>
-                                                                        <td>
-                                                                            <?php if($value['usedin'] != ""): ?>
-                                                                            <?php $usedin = unserialize($value['usedin']); ?>
-                                                                                <ul>
-                                                                                    <?php foreach ($usedin as $usedkey => $usedvalue): ?>
-                                                                                        <li><a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $usedvalue; ?>"><?php echo $usedvalue; ?></a></li>
-                                                                                    <?php endforeach; ?>
-                                                                                </ul>
-                                                                            <?php endif; ?>
-                                                                        </td>
-                                                                        <td> <?php echo $value['premarks']; ?> </td>
-                                                                    </tr>
-                                                                <?php } ?>
-                                                            </tbody>
-                                                        </table>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th> Ammount </th>
+                                                        <th> Balance </th>
+                                                        <th> From </th>
+                                                        <th> Used in </th>
+                                                        <th> Remarks </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($onsound as $key => $value) { ?>
+                                                        <tr class="">
+                                                            <td>₱<?php echo number_format($value['amount'], 2, '.', ','); ?> </td>
+                                                            <td>₱<?php echo number_format($value['abalance'], 2, '.', ','); ?> </td>
+                                                            <td> <?php echo $value['dtype']; ?> </td>
+                                                            <td>
+                                                                <?php if($value['usedin'] != ""): ?>
+                                                                <?php $usedin = unserialize($value['usedin']); ?>
+                                                                    <ul>
+                                                                        <?php foreach ($usedin as $usedkey => $usedvalue): ?>
+                                                                            <li><a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $usedvalue; ?>"><?php echo $usedvalue; ?></a></li>
+                                                                        <?php endforeach; ?>
+                                                                    </ul>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td> <?php echo $value['premarks']; ?> </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="clear">
+                    <div class="col-md-12">
+                        <div class="daccounts">
+                            <div class="dinneraccounts">
+                                <div class="portlet box blue-hoki">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-gift"></i>Packing Lists</div>
+                                        <!-- <div class="actions">
+                                            <a href="javascript:;" class="btn btn-default btn-sm">
+                                                <i class="fa fa-pencil"></i> Edit </a>
+                                            <a href="javascript:;" class="btn btn-default btn-sm">
+                                                <i class="fa fa-plus"></i> Add </a>
+                                        </div> -->
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="inner-body">
+                                            <?php
+                                                $onsound = $client::getPackingListPerClient($_GET['cid']);
+                                            ?>
+                                            
+                                            <?php
+                                            // echo date("Y");
+                                            $lisrofstocks = [];
+                                            for ($i=1; $i <= 12; $i++) { 
+                                                $lisrofstocks[$i] = [];
+                                            }
+                                            foreach($onsound as $plkey => $plvals):
+                                                // echo  $plvals['date'];
+                                                $d = date_parse_from_format("Y-m-d", $plvals['date']);
+                                                // echo $d["month"]." + ";
+                                                $ditem = $d["month"];
+                                                $plvals['month'] = $d["month"];
+                                                $plvals['year'] = $d["year"];
+                                                array_push($lisrofstocks[$ditem], $plvals);
+                                                
+                                            endforeach; ?>
+                                            <!-- <pre>
+                                                <?php print_r($lisrofstocks); ?>
+                                            </pre> -->
+                                            <?php foreach ($lisrofstocks as $key => $dplvalss) {
+                                                $count = 0;
+                                                if(!empty($dplvalss)){
+                                                    foreach ($dplvalss as $sxkey => $sxvalue) {
+                                                        if($sxvalue['year'] == '2019'){
+                                                            $count++;
+                                                        }
+                                                    }
+                                                }    
+
+                                                $dateObj   = DateTime::createFromFormat('!m', $key);
+                                                
+                                            ?>
+                                                <div class="col-sm-3" style="margin-bottom: 10px;">
+                                                    <a class="dashboard-stat dashboard-stat-v2 blue-hoki" data-toggle="modal" href="#m<?php echo $key; ?>">
+                                                        <div class="visual">
+                                                            <i class="fa fa-trophy"></i>
+                                                        </div>
+                                                        <div class="details">
+                                                            <div class="number">
+                                                                <span data-counter="counterup" data-value="<?php echo $count; ?>"><?php echo $count; ?></span>
+                                                            </div>
+                                                            <div class="desc small"> <h5 style="margin:0;">Transactions for</h5> </div>
+                                                            <div class="desc"> <?php echo $dateObj->format('F'); ?> 2019 </div>
+                                                        </div>
+                                                    </a>
+                                                    <div class="modal fade" id="m<?php echo $key; ?>" tabindex="-1" role="basic" aria-hidden="true" style="display: none;">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                                                    <h4 class="modal-title">January 2019</h4>
+                                                                </div>
+                                                                <div class="modal-body" style="height: 400px;overflow: auto;">
+                                                                
+                                                                    <table class="table table-hover table-light">
+                                                                        <thead>
+                                                                            <tr class="uppercase">
+                                                                                <th> Date </th>
+                                                                                <th> Coil Number </th>
+                                                                                <th> Profile </th>
+                                                                                <th> Total LM </th>
+                                                                                <th> Total NW </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        <?php $istotal = 0;?>
+                                                                        <?php if(!empty($dplvalss)): ?>
+                                                                            <?php foreach($dplvalss as $plinfkey => $plinfvalue): ?>
+                                                                            <?php $istotal += $plinfvalue['order_total']; ?>
+                                                                            <?php $olindetails = unserialize($plinfvalue['order_specs']); ?>
+                                                                                <pre>
+                                                                                    <?php print_r($olindetails); ?>
+                                                                                </pre>
+                                                                            <?php endforeach; ?>
+                                                                        <?php endif; ?>
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th></th>
+                                                                                <th></th>
+                                                                                <th></th>
+                                                                                <th></th>
+                                                                                <th><?php echo $istotal; ?></th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            <?php } ?>
+                                            <br class="clear">
                                         </div>
                                     </div>
                                 </div>
