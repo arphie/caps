@@ -177,7 +177,7 @@
                                                                 <?php $usedin = unserialize($value['usedin']); ?>
                                                                     <ul>
                                                                         <?php foreach ($usedin as $usedkey => $usedvalue): ?>
-                                                                            <li><a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $usedvalue; ?>"><?php echo $usedvalue; ?></a></li>
+                                                                            <li><a href="<?php echo $baseline; ?>/index.php?page=view_packinglist&pid=<?php echo $usedvalue; ?>">PL <?php echo $usedvalue; ?></a></li>
                                                                         <?php endforeach; ?>
                                                                     </ul>
                                                                 <?php endif; ?>
@@ -264,7 +264,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                                                    <h4 class="modal-title">January 2019</h4>
+                                                                    <h4 class="modal-title"><?php echo $dateObj->format('F'); ?> 2019</h4>
                                                                 </div>
                                                                 <div class="modal-body" style="height: 400px;overflow: auto;">
                                                                 
@@ -272,21 +272,26 @@
                                                                         <thead>
                                                                             <tr class="uppercase">
                                                                                 <th> Date </th>
-                                                                                <th> Coil Number </th>
-                                                                                <th> Profile </th>
-                                                                                <th> Total LM </th>
-                                                                                <th> Total NW </th>
+                                                                                <th> PL # </th>
+                                                                                <th style="text-align:right;"> Total </th>
+                                                                                <th style="text-align:right;"> Balance </th>
+                                                                                <!-- <th> Total NW </th> -->
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                         <?php $istotal = 0;?>
+                                                                        <?php $isbalance = 0;?>
                                                                         <?php if(!empty($dplvalss)): ?>
                                                                             <?php foreach($dplvalss as $plinfkey => $plinfvalue): ?>
                                                                             <?php $istotal += $plinfvalue['order_total']; ?>
+                                                                            <?php $isbalance += $plinfvalue['ord_balance']; ?>
                                                                             <?php $olindetails = unserialize($plinfvalue['order_specs']); ?>
-                                                                                <pre>
-                                                                                    <?php print_r($olindetails); ?>
-                                                                                </pre>
+                                                                                <tr>
+                                                                                    <td><?php echo date('M d', strtotime($plinfvalue['date'])); ?></td>
+                                                                                    <td><a target="_blank" href="/caps/index.php?page=view_packinglist&pid=<?php echo $plinfvalue['order_id']; ?>">PL <?php echo $plinfvalue['order_id']; ?></a></td>
+                                                                                    <td style="text-align:right;">₱ <?php echo number_format($plinfvalue['order_total'], 2, ".", ","); ?></td>
+                                                                                    <td style="text-align:right;">₱ <?php echo number_format($plinfvalue['ord_balance'], 2, ".", ","); ?></td>
+                                                                                </tr>
                                                                             <?php endforeach; ?>
                                                                         <?php endif; ?>
                                                                         </tbody>
@@ -294,9 +299,8 @@
                                                                             <tr>
                                                                                 <th></th>
                                                                                 <th></th>
-                                                                                <th></th>
-                                                                                <th></th>
-                                                                                <th><?php echo $istotal; ?></th>
+                                                                                <th style="text-align:right;padding: 5px;">₱ <?php echo number_format($istotal, 2, ".", ","); ?></th>
+                                                                                <th style="text-align:right;padding: 5px;">₱ <?php echo number_format($isbalance, 2, ".", ","); ?></th>
                                                                             </tr>
                                                                         </tfoot>
                                                                     </table>
